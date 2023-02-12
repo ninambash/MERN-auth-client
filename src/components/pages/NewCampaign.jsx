@@ -28,7 +28,7 @@ export default function NewCampaign(currentUser) {
         axios.post(`${process.env.REACT_APP_SERVER_URL}/campaign/new`, form, options)
         .then(response => {
             console.log(response.data);
-            navigate('/campaigns');
+            navigate('/');
         })
         .catch(console.warn);
     };
