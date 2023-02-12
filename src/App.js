@@ -1,41 +1,34 @@
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate
+  Route
 } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import Login from './components/pages/Login'
-import Profile from './components/pages/Profile'
-import Register from './components/pages/Register'
-import Welcome from './components/pages/Welcome'
+import LoginPage from './components/pages/Login'
+import ProfilePage from './components/pages/Profile'
+import RegisterPage from './components/pages/Register'
+import HomePage from './components/pages/Home'
+import NewCampaign from './components/pages/NewCampaign';
+import CampaignsPage from './components/pages/Campaigns'
 import Navbar from './components/Navbar'
 import './App.css'
 import jwt_decode from 'jwt-decode'
 
 function App() {
-  // the currently logged in user will be stored up here in state
   const [currentUser, setCurrentUser] = useState(null)
 
-  // useEffect -- if the user navigates away form the page, we will log them back in
   useEffect(() => {
-    // check to see if token is in storage
     const token = localStorage.getItem('jwt')
     if (token) {
-      // if so, we will decode it and set the user in app state
       setCurrentUser(jwt_decode(token))
     } else {
       setCurrentUser(null)
     }
-  }, []) // happen only once
+  }, [])
 
-  // event handler to log the user out when needed
   const handleLogout = () => {
-    // check to see if a token exists in local storage
     if (localStorage.getItem('jwt')) {
-      // if so, delete it
       localStorage.removeItem('jwt')
-      // set the user in the App state to be null
       setCurrentUser(null)
     }
   }
@@ -53,35 +46,36 @@ function App() {
         <Routes>
           <Route 
             path="/"
-            element={<Welcome />}
+            element={<HomePage />}
           />
 
           <Route 
             path="/register"
-            element={<Register currentUser={currentUser} setCurrentUser={setCurrentUser} />}
+            element={<RegisterPage currentUser={currentUser} setCurrentUser={setCurrentUser} />}
           />
 
           <Route 
             path="/login"
-            element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser} />}
+            element={<LoginPage currentUser={currentUser} setCurrentUser={setCurrentUser} />}
           />
 
-          {/*optionally conditionally render auth locked routes */}
-          {/* 
-			<Route 
-			   path="/profile" 
-               element={currentUser ? <Profile handleLogout={handleLogout} currentUser={currentUser} setCurrentUser={setCurrentUser} /> : <Navigate to="/login" />}
-            /> 
-		  */}
+          <Route 
+            path="/newCampaign"
+            element={<NewCampaign currentUser={currentUser} />}
+          />
+
+          <Route 
+            path="/campaigns"
+            element={<CampaignsPage currentUser={currentUser} />}
+          />
 
           <Route 
             path="/profile"
-            element={<Profile handleLogout={handleLogout} currentUser={currentUser} setCurrentUser={setCurrentUser} />}
+            element={<ProfilePage handleLogout={handleLogout} currentUser={currentUser} setCurrentUser={setCurrentUser} />}
           />
         </Routes>
       </div>
     </Router>
-  );
+  )
 }
-
-export default App;
+export default App
